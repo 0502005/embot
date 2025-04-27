@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()  # Load .env file
 
 #USERNAME = os.getenv("BSKY_USERNAME")
-USERNAME = hcguguembot.bsky.social
+USERNAME = "hcguguembot.bsky.social"
 #PASSWORD = os.getenv("BSKY_PASSWORD")
-PASSWORD = yeb2-34d6-oiyc-wvpr
+PASSWORD = "yeb2-34d6-oiyc-wvpr"
 
 client=Client()
 client.login(USERNAME, PASSWORD)
