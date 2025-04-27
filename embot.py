@@ -9,8 +9,9 @@ load_dotenv()  # Load .env file
 USERNAME = os.getenv("BSKY_USERNAME")
 PASSWORD = os.getenv("BSKY_PASSWORD")
 
-print(USERNAME)
-print(PASSWORD)
+client=Client()
+client.login(USERNAME, PASSWORD)
+print("Logged in as", client.me)
 
 def load_poems():
     with open('emily-dickinson.json', 'r', encoding='utf-8') as f:
