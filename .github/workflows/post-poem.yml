@@ -24,7 +24,7 @@ jobs:
           pip install atproto requests python-dotenv
 
       - name: Run bot
-        env:
+        env: embot
           BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
           BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
         run: python embot.py
