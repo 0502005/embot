@@ -7,13 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()  # Load .env file
 
 USERNAME = os.getenv("BSKY_USERNAME")
-#USERNAME = "hcguguembot.bsky.social"
 PASSWORD = os.getenv("BSKY_PASSWORD")
-#PASSWORD = "yeb2-34d6-oiyc-wvpr"
 
-client=Client()
-client.login(USERNAME, PASSWORD)
-print("Logged in as", client.me)
+#client=Client()
+#client.login(USERNAME, PASSWORD)
+#print("Logged in as", client.me)
 
 def load_poems():
     with open('emily-dickinson.json', 'r', encoding='utf-8') as f:
