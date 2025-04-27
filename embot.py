@@ -8,6 +8,7 @@ load_dotenv()  # Load .env file
 
 USERNAME = os.getenv("BSKY_USERNAME")
 PASSWORD = os.getenv("BSKY_PASSWORD")
+print(USERNAME)
 
 client=Client()
 client.login(USERNAME, PASSWORD)
