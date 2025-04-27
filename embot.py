@@ -15,7 +15,7 @@ def load_poems():
     return poems
 
 def pick_poem(poems):
-    return random.choice(poems)['s'].strip()
+    return random.choice(poems)['content'].strip()
 
 def post_poem(poem):
     client = Client()
