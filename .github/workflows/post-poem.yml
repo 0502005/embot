@@ -2,7 +2,7 @@ name: Post Emily Dickinson Poem
 
 on:
   schedule:
-    - cron: '* 11 * * *'  # runs every day at 11:00 UTC
+    - cron: '0 11 * * *'  # runs every day at 11:00 UTC
   workflow_dispatch:      # allows manual run
 
 jobs:
