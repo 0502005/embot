@@ -3,6 +3,7 @@ import json
 import os
 from atproto import Client
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -48,18 +49,20 @@ def add_numbering_if_needed(parts):
     return numbered_parts
 
 def post_poem_thread(poem_parts):
+
     client = Client()
     client.login(USERNAME, PASSWORD)
 
     post_ref = None
+    root_ref = None
 
-    for part in poem_parts:
+    for index, part in enumerate(poem_parts):
         if post_ref:
             reply_ref = {
                 "$type": "app.bsky.feed.post#replyRef",
                 "root": {
-                    "cid": post_ref.cid,
-                    "uri": post_ref.uri
+                    "cid": root_ref.cid,
+                    "uri": root_ref.uri
                 },
                 "parent": {
                     "cid": post_ref.cid,
@@ -67,8 +70,14 @@ def post_poem_thread(poem_parts):
                 }
             }
             post_ref = client.send_post(text=part, reply=reply_ref)
+            time.sleep(1)
         else:
             post_ref = client.send_post(text=part)
+            time.sleep(1)
+            root_ref = post_ref  # set root_ref to the first post
+
+        print(f"Posted part {index + 1}: {post_ref.uri}")
+
 
 
 def main():
