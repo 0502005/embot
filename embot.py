@@ -5,6 +5,7 @@ from atproto import Client
 from atproto import models
 from dotenv import load_dotenv
 import time
+from datetime import datetime, timezone
 
 load_dotenv()
 
@@ -58,6 +59,8 @@ def post_poem_thread(poem_parts):
     root_ref = None
 
     for index, part in enumerate(poem_parts):
+        created_at = datetime.now(timezone.utc).isoformat()
+
         if post_ref:
             reply_ref = models.AppBskyFeedPost.ReplyRef(
                 root=models.ComAtprotoRepoStrongRef.Main(
@@ -72,15 +75,19 @@ def post_poem_thread(poem_parts):
 
             record = models.AppBskyFeedPost.Record(
                 text=part,
-                reply=reply_ref
+                reply=reply_ref,
+                createdAt=created_at
+            )
+        else:
+            record = models.AppBskyFeedPost.Record(
+                text=part,
+                createdAt=created_at
             )
 
-        else:
-            record = models.AppBskyFeedPost.Record(text=part)
-
         post_ref = client.send_post(record)
+
         if index == 0:
-            root_ref = post_ref  # save the root of the thread
+            root_ref = post_ref  # set the thread root
 
         print(f"Posted part {index + 1}: {post_ref.uri}")
 
