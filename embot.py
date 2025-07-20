@@ -2,6 +2,7 @@ import random
 import json
 import os
 from atproto import Client
+from atproto import models
 from dotenv import load_dotenv
 import time
 
@@ -48,8 +49,8 @@ def add_numbering_if_needed(parts):
     ]
     return numbered_parts
 
-def post_poem_thread(poem_parts):
 
+def post_poem_thread(poem_parts):
     client = Client()
     client.login(USERNAME, PASSWORD)
 
@@ -58,23 +59,28 @@ def post_poem_thread(poem_parts):
 
     for index, part in enumerate(poem_parts):
         if post_ref:
-            reply_ref = {
-                "$type": "app.bsky.feed.post#replyRef",
-                "root": {
-                    "cid": root_ref.cid,
-                    "uri": root_ref.uri
-                },
-                "parent": {
-                    "cid": post_ref.cid,
-                    "uri": post_ref.uri
-                }
-            }
-            post_ref = client.send_post(text=part, reply=reply_ref)
-            time.sleep(1)
+            reply_ref = models.AppBskyFeedPost.ReplyRef(
+                root=models.ComAtprotoRepoStrongRef.Main(
+                    cid=root_ref.cid,
+                    uri=root_ref.uri
+                ),
+                parent=models.ComAtprotoRepoStrongRef.Main(
+                    cid=post_ref.cid,
+                    uri=post_ref.uri
+                )
+            )
+
+            record = models.AppBskyFeedPost.Record(
+                text=part,
+                reply=reply_ref
+            )
+
         else:
-            post_ref = client.send_post(text=part)
-            time.sleep(1)
-            root_ref = post_ref  # set root_ref to the first post
+            record = models.AppBskyFeedPost.Record(text=part)
+
+        post_ref = client.send_post(record)
+        if index == 0:
+            root_ref = post_ref  # save the root of the thread
 
         print(f"Posted part {index + 1}: {post_ref.uri}")
 
