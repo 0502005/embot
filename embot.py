@@ -52,11 +52,24 @@ def post_poem_thread(poem_parts):
     client.login(USERNAME, PASSWORD)
 
     post_ref = None
+
     for part in poem_parts:
         if post_ref:
-            post_ref = client.send_post(text=part, reply_to=post_ref)
+            reply_ref = {
+                "$type": "app.bsky.feed.post#replyRef",
+                "root": {
+                    "cid": post_ref.cid,
+                    "uri": post_ref.uri
+                },
+                "parent": {
+                    "cid": post_ref.cid,
+                    "uri": post_ref.uri
+                }
+            }
+            post_ref = client.send_post(text=part, reply=reply_ref)
         else:
             post_ref = client.send_post(text=part)
+
 
 def main():
     poems = load_poems()
