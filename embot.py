@@ -77,7 +77,7 @@ def post_poem_thread(poem_parts):
         # Don't pass created_at — let the client handle it
         post_ref = client.send_post(
             text=part,
-            reply=reply_ref
+            reply_to=reply_ref
         )
 
         if index == 0:
