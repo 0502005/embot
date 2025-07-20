@@ -51,6 +51,9 @@ def add_numbering_if_needed(parts):
     return numbered_parts
 
 
+from datetime import datetime, timezone
+from atproto import models
+
 def post_poem_thread(poem_parts):
     client = Client()
     client.login(USERNAME, PASSWORD)
@@ -61,33 +64,29 @@ def post_poem_thread(poem_parts):
     for index, part in enumerate(poem_parts):
         created_at = datetime.now(timezone.utc).isoformat()
 
+        reply_ref = None
         if post_ref:
-            reply_ref = models.AppBskyFeedPost.ReplyRef(
-                root=models.ComAtprotoRepoStrongRef.Main(
-                    cid=root_ref.cid,
-                    uri=root_ref.uri
-                ),
-                parent=models.ComAtprotoRepoStrongRef.Main(
-                    cid=post_ref.cid,
-                    uri=post_ref.uri
-                )
-            )
+            reply_ref = {
+                "$type": "app.bsky.feed.post#replyRef",
+                "root": {
+                    "cid": root_ref.cid,
+                    "uri": root_ref.uri
+                },
+                "parent": {
+                    "cid": post_ref.cid,
+                    "uri": post_ref.uri
+                }
+            }
 
-            record = models.AppBskyFeedPost.Record(
-                text=part,
-                reply=reply_ref,
-                createdAt=created_at
-            )
-        else:
-            record = models.AppBskyFeedPost.Record(
-                text=part,
-                createdAt=created_at
-            )
-
-        post_ref = client.send_post(record)
+        # THIS is the correct usage: pass parameters directly
+        post_ref = client.send_post(
+            text=part,
+            created_at=created_at,
+            reply=reply_ref
+        )
 
         if index == 0:
-            root_ref = post_ref  # set the thread root
+            root_ref = post_ref
 
         print(f"Posted part {index + 1}: {post_ref.uri}")
 
