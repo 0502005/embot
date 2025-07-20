@@ -51,9 +51,6 @@ def add_numbering_if_needed(parts):
     return numbered_parts
 
 
-from datetime import datetime, timezone
-from atproto import models
-
 def post_poem_thread(poem_parts):
     client = Client()
     client.login(USERNAME, PASSWORD)
@@ -62,8 +59,7 @@ def post_poem_thread(poem_parts):
     root_ref = None
 
     for index, part in enumerate(poem_parts):
-        created_at = datetime.now(timezone.utc).isoformat()
-
+        # Only include reply if this is not the first post
         reply_ref = None
         if post_ref:
             reply_ref = {
@@ -78,17 +74,17 @@ def post_poem_thread(poem_parts):
                 }
             }
 
-        # THIS is the correct usage: pass parameters directly
+        # Don't pass created_at — let the client handle it
         post_ref = client.send_post(
             text=part,
-            created_at=created_at,
             reply=reply_ref
         )
 
         if index == 0:
-            root_ref = post_ref
+            root_ref = post_ref  # Save root for threading
 
         print(f"Posted part {index + 1}: {post_ref.uri}")
+
 
 
 
