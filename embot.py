@@ -84,7 +84,6 @@ def post_poem_thread(poem_parts):
             root_ref = post_ref  # Save root for threading
 
         print(f"Posted part {index + 1}: {post_ref.uri}")
-#to un-disable it
 
 
 
