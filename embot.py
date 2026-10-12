@@ -53,8 +53,8 @@ def add_numbering_if_needed(parts):
 
 def post_poem_thread(poem_parts):
     client = Client()
-    #client.login(USERNAME, PASSWORD)
-    client.login(USERNAME, PASSWORD, fetch_bsky_profile=False)
+    client.login(USERNAME, PASSWORD)
+    #client.login(USERNAME, PASSWORD, fetch_bsky_profile=False)
 
 
     post_ref = None
